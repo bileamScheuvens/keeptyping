@@ -14,7 +14,7 @@ CFLAGS := $(INC_FLAGS) -MMD -MP $(shell pkg-config --cflags ncurses)
 LDFLAGS := $(shell pkg-config --libs ncurses)
 
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
-	$(CC) $(OBJS) -o $@ $(LDFLAGS)
+	$(CC) $(OBJS) -g -o $@ $(LDFLAGS)
 
 $(BUILD_DIR)/%.c.o: %.c
 	mkdir -p $(dir $@)
