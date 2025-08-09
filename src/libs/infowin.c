@@ -29,6 +29,7 @@ WINDOW* create_infowin(){
 
 
 void refresh_infowin(WINDOW* infowin, struct Bombattrs* bombattrs){
+  wclear(infowin);
   box(infowin,0,0);
 
   // ----------------- SERIAL NUMBER ---------------------
@@ -41,7 +42,7 @@ void refresh_infowin(WINDOW* infowin, struct Bombattrs* bombattrs){
   // ------------------ NR BATTERIES ---------------------- 
   mvwprintw(infowin, 1, BATTERY_LABEL, "(B)atteries: ");
   if (bombattrs->nr_batteries) {
-    mvwprintw(infowin, 1, BATTERY_CONTENT, "%d", bombattrs->nr_batteries);
+    mvwprintw(infowin, 1, BATTERY_CONTENT, "%d", bombattrs->nr_batteries-1);
   } else {
     mvwprintw(infowin, 1, BATTERY_CONTENT, "NULL");
   }
@@ -105,6 +106,18 @@ void set_serial(WINDOW* infowin, struct Bombattrs* bombattrs){
   curs_set(0);
 }
 
+void set_batteries(WINDOW* infowin, struct Bombattrs* bombattrs){
+  wmove(infowin, 1, BATTERY_CONTENT);
+  curs_set(1);
+  int c = wgetch(infowin);
+  c -= '0';
+  if (0<=c && c<=9){
+    bombattrs->nr_batteries = c+1;
+  }
+  curs_set(0);
+  refresh_infowin(infowin, bombattrs);
+}
+
 void set_port(WINDOW* infowin, struct Bombattrs* bombattrs){
   bool has_pport;
 
@@ -125,6 +138,7 @@ void set_port(WINDOW* infowin, struct Bombattrs* bombattrs){
       bombattrs->parallel_port = false;
       break;
   }
-  wclear(infowin);
   refresh_infowin(infowin, bombattrs);
 }
+
+

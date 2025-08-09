@@ -23,6 +23,7 @@ extern int TIMER_LABEL;
 extern int TIMER_CONTENT;
 
 void set_serial(WINDOW* infowin, struct Bombattrs* bombattrs);
+void set_batteries(WINDOW* infowin, struct Bombattrs* bombattrs);
 void set_port(WINDOW* infowin, struct Bombattrs* bombattrs);
 
 

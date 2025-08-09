@@ -31,6 +31,9 @@ int main(){
       case 'S':
         set_serial(infowin, &bombattrs);
         break;
+      case 'B':
+        set_batteries(infowin, &bombattrs);
+        break;
       case 'P':
         set_port(infowin, &bombattrs);
         break;
