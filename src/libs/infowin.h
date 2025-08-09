@@ -3,15 +3,27 @@
 
 #include <ncurses.h>
 #include <time.h>
+#include <stdbool.h>
 
 struct Bombattrs {
   char serial_nr[6];
   int nr_batteries;
-  int parallel_port;
+  bool parallel_port;
+  bool port_initialized; // hacky as hell, but null evals to false so need this way to distinguish
   time_t timer;
 };
 
-void set_serial(struct Bombattrs* bombattrs);
+extern int SERIAL_LABEL;
+extern int SERIAL_CONTENT;
+extern int BATTERY_LABEL;
+extern int BATTERY_CONTENT;
+extern int PORT_LABEL;
+extern int PORT_CONTENT;
+extern int TIMER_LABEL;
+extern int TIMER_CONTENT;
+
+void set_serial(WINDOW* infowin, struct Bombattrs* bombattrs);
+void set_port(WINDOW* infowin, struct Bombattrs* bombattrs);
 
 
 WINDOW* create_infowin();
