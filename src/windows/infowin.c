@@ -52,7 +52,7 @@ void refresh_infowin(WINDOW* infowin, struct Bombattrs* bombattrs){
   }
   // ------------------ NR BATTERIES ---------------------- 
   mvwprintw(infowin, 1, BATTERY_LABEL, "(B)atteries: ");
-  if (bombattrs->nr_batteries) {
+  if (bombattrs->nr_batteries >=0) {
     mvwprintw(infowin, 1, BATTERY_CONTENT, "%d", bombattrs->nr_batteries-1);
   } else {
     mvwprintw(infowin, 1, BATTERY_CONTENT, "NULL");

@@ -24,6 +24,7 @@ int main(){
   // global bomb attributes
   struct Bombattrs bombattrs;
   bombattrs.parallel_port = -1;
+  bombattrs.nr_batteries = -1;
   bombattrs.serial_nr[0] = '-';
 
   // init windows
