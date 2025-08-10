@@ -15,6 +15,11 @@ int main(){
   noecho();
   start_color();
   curs_set(0);
+
+  // color pair 1 means disabled
+  // use yellow for gray
+  init_color(COLOR_YELLOW, 300, 300, 300);
+  init_pair(1, COLOR_YELLOW, COLOR_BLACK);
   
   // global bomb attributes
   struct Bombattrs bombattrs;
@@ -23,13 +28,11 @@ int main(){
 
   // init windows
   WINDOW* infowin = create_infowin();
+  refresh_infowin(infowin, &bombattrs);
   WINDOW* contentwin = create_contentwin();
   WINDOW* miscwin = create_miscwin();
   WINDOW* selectwin = create_selectwin();
-
-
-  wattron(infowin, A_BLINK);
-  refresh_infowin(infowin, &bombattrs);
+  refresh_selectwin(selectwin, false);
 
 
 
@@ -37,7 +40,6 @@ int main(){
   bool running = true;
   while (running) {
     int c = wgetch(selectwin);
-
     int c2;
     mvwprintw(miscwin,1,1, "%c, %d pressed", c, c);
     wrefresh(miscwin);
@@ -58,7 +60,9 @@ int main(){
 
       // WIRES
       case 'w':
-        switch(wgetch(contentwin)){
+        c2 = wgetch(contentwin);
+        refresh_selectwin(selectwin, true);
+        switch(c2){
           // TODO Highlight partial match
           case 'r':
             wires_regular(contentwin, miscwin);
@@ -72,7 +76,7 @@ int main(){
           default:
             break;
         }
-
+        refresh_selectwin(selectwin, false);
         break;
       default:
         break;

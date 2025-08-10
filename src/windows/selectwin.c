@@ -1,11 +1,19 @@
-#include <ncurses.h>
 #include "selectwin.h"
 
 
 WINDOW* create_selectwin(){
   WINDOW* selectwin = newwin(13,31,3,0);
+  return selectwin;
+}
+
+void refresh_selectwin(WINDOW* selectwin, bool disabled){
+  // TODO highlight selected option
   box(selectwin, 0,0);
+
   mvwprintw(selectwin, 0, 7, "MODULE SELECTION");
+  if (disabled){
+    wattron(selectwin, COLOR_PAIR(1));
+  }
   mvwprintw(selectwin, 1, 1, "- (w)ires -+-- (r)egular");
   mvwprintw(selectwin, 2, 1, "-          +-- (c)omplicated");
   mvwprintw(selectwin, 3, 1, "-          \\-- (s)equences");
@@ -18,5 +26,5 @@ WINDOW* create_selectwin(){
   mvwprintw(selectwin, 10, 1, "- (p)assword");
   mvwprintw(selectwin, 11, 1, "- (k)nob");
   wrefresh(selectwin);
-  return selectwin;
+  wattroff(selectwin, COLOR_PAIR(1));
 }
