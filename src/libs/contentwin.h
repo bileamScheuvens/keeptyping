@@ -5,5 +5,6 @@
 
 
 WINDOW* create_contentwin();
+void draw_selectwin();
 
 #endif

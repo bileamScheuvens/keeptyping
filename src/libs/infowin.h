@@ -13,6 +13,7 @@ struct Bombattrs {
   time_t timer;
 };
 
+extern int TITLE_LABEL;
 extern int SERIAL_LABEL;
 extern int SERIAL_CONTENT;
 extern int BATTERY_LABEL;

@@ -1,7 +1,7 @@
 #include <ncurses.h>
-#include <string.h>
 #include "infowin.h"
 
+int TITLE_LABEL;
 int SERIAL_LABEL;
 int SERIAL_CONTENT;
 int BATTERY_LABEL;
@@ -15,6 +15,7 @@ WINDOW* create_infowin(){
   WINDOW* infowin = newwin(3,0,0,0);
 
   int winlen = getmaxx(infowin);
+  TITLE_LABEL = winlen/2 - 5 ;
   SERIAL_LABEL = 1;
   SERIAL_CONTENT = SERIAL_LABEL + 13;
   BATTERY_LABEL = winlen/3;
@@ -31,6 +32,7 @@ WINDOW* create_infowin(){
 void refresh_infowin(WINDOW* infowin, struct Bombattrs* bombattrs){
   wclear(infowin);
   box(infowin,0,0);
+  mvwprintw(infowin, 0, TITLE_LABEL, "INFO PANEL");
 
   // ----------------- SERIAL NUMBER ---------------------
   mvwprintw(infowin, 1, SERIAL_LABEL, "(S)erial Nr: ");
@@ -80,8 +82,6 @@ void set_serial(WINDOW* infowin, struct Bombattrs* bombattrs){
     int c = wgetch(infowin);
     switch (c){
       case KEY_ENTER:
-        i = 6;
-        break;
       case 27: // Esc
         i = 6;
         break;
