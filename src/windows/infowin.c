@@ -36,7 +36,7 @@ void refresh_infowin(WINDOW* infowin, struct Bombattrs* bombattrs){
 
   // ----------------- SERIAL NUMBER ---------------------
   mvwprintw(infowin, 1, SERIAL_LABEL, "(S)erial Nr: ");
-  if (bombattrs->serial_nr[0] != '\0') {
+  if (bombattrs->serial_nr[0] != '-') {
     mvwprintw(infowin, 1, SERIAL_CONTENT, "%s", bombattrs->serial_nr);
   } else {
     mvwprintw(infowin, 1, SERIAL_CONTENT, "NULL");
@@ -51,14 +51,15 @@ void refresh_infowin(WINDOW* infowin, struct Bombattrs* bombattrs){
   // -------------------- PORTS ------------------------ 
   // TODO: support more than parallel
   mvwprintw(infowin, 1, PORT_LABEL, "(P)orts: ");
-  if (bombattrs->port_initialized) {
-    if (bombattrs->parallel_port) {
+  switch (bombattrs->parallel_port) {
+    case 1:
       mvwprintw(infowin, 1, PORT_CONTENT, "[Parallel]");
-    } else {
+      break;
+    case 0:
       mvwprintw(infowin, 1, PORT_CONTENT, "[]");
-    }
-  } else {
-    mvwprintw(infowin, 1, PORT_CONTENT, "NULL");
+      break;
+    default:
+      mvwprintw(infowin, 1, PORT_CONTENT, "NULL");
   }
   // -------------------- TIMER ------------------------ 
   mvwprintw(infowin, 1, TIMER_LABEL, "(T)imer: ");
@@ -81,7 +82,7 @@ void set_serial(WINDOW* infowin, struct Bombattrs* bombattrs){
   for (int i = 0; i<6; i++){
     int c = wgetch(infowin);
     switch (c){
-      case KEY_ENTER:
+      case 10: // ENTER
       case 27: // Esc
         i = 6;
         break;
@@ -119,9 +120,7 @@ void set_batteries(WINDOW* infowin, struct Bombattrs* bombattrs){
 }
 
 void set_port(WINDOW* infowin, struct Bombattrs* bombattrs){
-  bool has_pport;
-
-  bombattrs->port_initialized = false;
+  bombattrs->parallel_port = -1;
   refresh_infowin(infowin, bombattrs);
   mvwprintw(infowin, 1, PORT_CONTENT, "(y/n)");
   wrefresh(infowin);
@@ -130,12 +129,10 @@ void set_port(WINDOW* infowin, struct Bombattrs* bombattrs){
     case 27:
       break;
     case 'y':
-      bombattrs->port_initialized = true;
-      bombattrs->parallel_port = true;
+      bombattrs->parallel_port = 1;
       break;
     case 'n':
-      bombattrs->port_initialized = true;
-      bombattrs->parallel_port = false;
+      bombattrs->parallel_port = 0;
       break;
   }
   refresh_infowin(infowin, bombattrs);

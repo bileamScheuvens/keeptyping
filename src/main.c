@@ -1,9 +1,9 @@
 #include <ncurses.h>
 #include <stdbool.h>
-#include "libs/infowin.h"
-#include "libs/contentwin.h"
-#include "libs/selectwin.h"
-#include "libs/miscwin.h"
+#include "windows/infowin.h"
+#include "windows/contentwin.h"
+#include "windows/selectwin.h"
+#include "windows/miscwin.h"
 
 #include "modules/wires.h"
 
@@ -13,10 +13,13 @@ int main(){
   initscr();
   cbreak();
   noecho();
+  start_color();
   curs_set(0);
   
   // global bomb attributes
   struct Bombattrs bombattrs;
+  bombattrs.parallel_port = -1;
+  bombattrs.serial_nr[0] = '-';
 
   // init windows
   WINDOW* infowin = create_infowin();
@@ -25,14 +28,16 @@ int main(){
   WINDOW* selectwin = create_selectwin();
 
 
+  wattron(infowin, A_BLINK);
   refresh_infowin(infowin, &bombattrs);
 
-  
+
 
   // main loop
   bool running = true;
   while (running) {
     int c = wgetch(selectwin);
+
     int c2;
     mvwprintw(miscwin,1,1, "%c, %d pressed", c, c);
     wrefresh(miscwin);
@@ -67,6 +72,7 @@ int main(){
           default:
             break;
         }
+
         break;
       default:
         break;

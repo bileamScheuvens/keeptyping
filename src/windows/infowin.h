@@ -8,8 +8,7 @@
 struct Bombattrs {
   char serial_nr[6];
   int nr_batteries;
-  bool parallel_port;
-  bool port_initialized; // hacky as hell, but null evals to false so need this way to distinguish
+  int parallel_port;
   time_t timer;
 };
 
