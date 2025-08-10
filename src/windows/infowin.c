@@ -1,5 +1,14 @@
-#include <ncurses.h>
 #include "infowin.h"
+
+bool odd_serial_nr(struct Bombattrs* bombattrs){
+  for (int i=5; i>= 0; i--){
+    char x = bombattrs->serial_nr[i];
+    if (isdigit(x)){
+      return x % 2 == 1;
+    }
+  }
+  return -1;
+}
 
 int TITLE_LABEL;
 int SERIAL_LABEL;

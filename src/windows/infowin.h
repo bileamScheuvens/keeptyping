@@ -3,6 +3,7 @@
 
 #include <ncurses.h>
 #include <time.h>
+#include <ctype.h>
 #include <stdbool.h>
 
 struct Bombattrs {
@@ -11,6 +12,8 @@ struct Bombattrs {
   int parallel_port;
   time_t timer;
 };
+
+bool odd_serial_nr(struct Bombattrs* bombattrs);
 
 extern int TITLE_LABEL;
 extern int SERIAL_LABEL;

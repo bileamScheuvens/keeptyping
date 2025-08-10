@@ -41,8 +41,10 @@ int main(){
   while (running) {
     int c = wgetch(selectwin);
     int c2;
-    mvwprintw(miscwin,1,1, "%c, %d pressed", c, c);
-    wrefresh(miscwin);
+
+    char msg[36];
+    sprintf(msg, "key pressed: %d - %c", c, c);
+    log_to_misc(miscwin, msg);
     switch(c) {
       // debug
       case 'q':
@@ -65,7 +67,7 @@ int main(){
         switch(c2){
           // TODO Highlight partial match
           case 'r':
-            wires_regular(contentwin, miscwin);
+            wires_regular(contentwin, miscwin, &bombattrs);
             break;
           case 'c':
             wires_complex(contentwin, miscwin);
