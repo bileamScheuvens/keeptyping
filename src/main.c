@@ -71,10 +71,10 @@ int main(){
             wires_regular(contentwin, miscwin, &bombattrs);
             break;
           case 'c':
-            wires_complex(contentwin, miscwin);
+            wires_complex(contentwin, miscwin, &bombattrs);
             break;
           case 's':
-            wires_sequence(contentwin, miscwin);
+            wire_sequence(contentwin, miscwin);
             break;
           default:
             break;

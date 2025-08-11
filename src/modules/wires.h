@@ -2,10 +2,11 @@
 #define WIRES_H
 
 #include <ncurses.h>
+#include <math.h>
 #include "../windows/infowin.h"
 
 void wires_regular(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombattrs);
-void wires_complex(WINDOW* contentwin, WINDOW* miscwin);
-void wires_sequence(WINDOW* contentwin, WINDOW* miscwin);
+void wires_complex(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombattrs);
+void wire_sequence(WINDOW* contentwin, WINDOW* miscwin);
 
 #endif

@@ -168,13 +168,240 @@ void wires_regular(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombat
 
 
 
-void wires_complex(WINDOW* contentwin, WINDOW* miscwin){
-  mvwprintw(miscwin, 2, 1, "complex selected");
-  wrefresh(miscwin);
+bool resolve_complex(bool red, bool blue, bool star, bool led, struct Bombattrs* bombattrs){
+  bool C = true;
+  bool D = true;
+  bool S = !odd_serial_nr(bombattrs);
+  bool P = bombattrs->parallel_port;
+  bool B = bombattrs->nr_batteries >= 2;
+
+  // interpret these as bitstr and access array
+  // TODO pray i translated this correctly
+  bool key[] = {
+    C, // 0000 - white, no star, no led
+    D, // 0001 - white, no star, led
+    C, // 0010  
+    B, // 0011
+    S, // 0100
+    P, // 0101 - blue, no star, led
+    D, // 0110
+    P, // 0111
+    S, // 1000
+    B, // 1001
+    C, // 1010
+    B, // 1011
+    S, // 1100
+    S, // 1101
+    P, // 1110
+    D, // 1111
+  };
+  int idx = red*8 + blue*4 + star*2 + led;
+  return key[idx];
 }
 
-void wires_sequence(WINDOW* contentwin, WINDOW* miscwin){
-  mvwprintw(miscwin, 2, 1, "sequence selected");
-  wrefresh(miscwin);
+
+void set_bool_and_draw(WINDOW* contentwin, bool *complex_attr, int pos, bool target){
+  /*
+  Utility to set complex wire attr and draw state to contentwin.
+  */
+  *complex_attr = target;
+  if (target){
+    mvwprintw(contentwin, 2, pos, "X");
+  }else{
+    mvwprintw(contentwin, 2, pos, " ");
+  }
+}
+
+void wires_complex(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombattrs){
+  char *msgs[] = {"Complex wires rely on", "- Serial Nr", "- Parallel Port", "- Battery count"};
+  log_to_misc_many(miscwin, msgs, 4);
+
+  const int REDX = 16;
+  const int BLUEX = 28;
+  const int STARX = 40;
+  const int LEDX = 51;
+  bool red = false;
+  bool blue = false;
+  bool star = false;
+  bool led = false;
+  bool cut = true;
+
+
+  // title and guide
+  mvwprintw(contentwin, 0, getmaxx(contentwin)/2 - 6, "COMPLEX WIRES");
+  mvwprintw(contentwin, 1, 1, "Specify color, star and LED.");
+  mvwprintw(contentwin, 2, 1, "Toggle: (r)ed [ ], (b)lue [ ], (s)tar [ ], (l)ed [ ] |  (c)lear  |");
+  mvwprintw(contentwin, 7, 15, "CUT WIRE -> %b", cut);
+  wrefresh(contentwin);
+
+  while(1){
+    int c = wgetch(contentwin);
+    switch(c){
+      case 'q':
+      case 10: // ENTER
+      case 27: // Escape
+        return;
+        break;
+      case 'r':
+        set_bool_and_draw(contentwin, &red, REDX, !red);
+        break;
+      case 'b': 
+        set_bool_and_draw(contentwin, &blue, BLUEX, !blue);
+        break;
+      case 's':
+        set_bool_and_draw(contentwin, &star, STARX, !star);
+        break;
+      case 'l':
+        set_bool_and_draw(contentwin, &led, LEDX, !led);
+        break;
+      case 'c':
+        set_bool_and_draw(contentwin, &red, REDX, false);
+        set_bool_and_draw(contentwin, &blue, BLUEX, false);
+        set_bool_and_draw(contentwin, &star, STARX, false);
+        set_bool_and_draw(contentwin, &led, LEDX, false);
+        break;
+    }
+    cut = resolve_complex(red, blue, star, led, bombattrs);
+    mvwprintw(contentwin, 7, 15, "CUT WIRE -> %b", cut);
+    wrefresh(contentwin);
+  }
+}
+
+int resolve_sequential(int color, int dest, int seq_idx){
+  /* Lookup tables for sequential wires. 
+   * Colors are 0 - red, 1 - blue, 2 - black. 
+   * Dest is 100 -> A, 10 -> B, 1 -> C.
+   * 
+   * Format is [seq_idx] = 1(leading one)101 -> cut if a or c*/
+
+  if (seq_idx > 8){
+    return -1;
+  }
+
+  int key[3][9] = {
+    //red
+    { 
+      1001,
+      1010,
+      1100,
+      1101,
+      1010,
+      1101,
+      1111,
+      1110,
+      1010,
+    },
+    // blue
+    { 
+      1010,
+      1101,
+      1010,
+      1100,
+      1010,
+      1011,
+      1001,
+      1101,
+      1100,
+    },
+    // black
+    { 
+      1111,
+      1101,
+      1010,
+      1101,
+      1010,
+      1011,
+      1110,
+      1001,
+      1001,
+    }
+  };
+  int raw_key = key[color][seq_idx];
+  // extract digit
+  return (raw_key / dest) % 10;
+}
+
+
+void wire_sequence(WINDOW* contentwin, WINDOW* miscwin){
+  init_pair(2, COLOR_RED, COLOR_BLACK); // red on black
+  init_pair(3, COLOR_BLUE, COLOR_BLACK); // blue on black
+
+  int red_count = 0;
+  int blue_count = 0;
+  int black_count = 0;
+  int cut;
+
+  // cleanup 
+  wclear(contentwin);
+  box(contentwin,0,0);
+
+  // title and guide
+  mvwprintw(contentwin, 0, getmaxx(contentwin)/2 - 6, "WIRE SEQUENCE");
+  mvwprintw(contentwin, 1, 1, "Specify color and destination:");
+  mvwprintw(contentwin, 2, 5, "red     blue      black");
+  wattron(contentwin, COLOR_PAIR(2));
+  mvwprintw(contentwin, 3, 4, "A B C");
+  wattron(contentwin, COLOR_PAIR(3));
+  mvwprintw(contentwin, 3, 13, "A B C");
+  wattroff(contentwin, COLOR_PAIR(3));
+  mvwprintw(contentwin, 3, 23, "A B C");
+  mvwprintw(contentwin, 4, 4, "a s d    f g h     j k l");
+  wrefresh(contentwin);
+
+  while (1){
+    int c = wgetch(contentwin);
+    switch(c){
+      case 'q':
+      case 10: // ENTER
+      case 27: // Escape
+        return;
+        break;
+      case 'a':
+        cut = resolve_sequential(0, 100, red_count);
+        red_count += 1;
+        break;
+      case 's':
+        cut = resolve_sequential(0, 10, red_count);
+        red_count += 1;
+        break;
+      case 'd':
+        cut = resolve_sequential(0, 1, red_count);
+        red_count += 1;
+        break;
+      case 'f':
+        cut = resolve_sequential(1, 100, blue_count);
+        blue_count += 1;
+        break;
+      case 'g':
+        cut = resolve_sequential(1, 10, blue_count);
+        blue_count += 1;
+        break;
+      case 'h':
+        cut = resolve_sequential(1, 1, blue_count);
+        blue_count += 1;
+        break;
+      case 'j':
+        cut = resolve_sequential(2, 100, blue_count);
+        black_count += 1;
+        break;
+      case 'k':
+        cut = resolve_sequential(2, 10, blue_count);
+        black_count += 1;
+        break;
+      case 'l':
+        cut = resolve_sequential(2, 1, blue_count);
+        black_count += 1;
+        break;
+    }
+  mvwprintw(contentwin, 5, 1, "Count:");
+  mvwprintw(contentwin, 6, 6, "%d", red_count);
+  mvwprintw(contentwin, 6, 15, "%d", blue_count);
+  mvwprintw(contentwin, 6, 25, "%d", black_count);
+  mvwprintw(contentwin, 8, 15, "CUT WIRE -> %d   ", cut);
+  if (cut<0){
+    mvwprintw(contentwin, 8, 15, "INVALID SEQUENCE");
+  }
+  wrefresh(contentwin);
+  }
 }
 
