@@ -1,9 +1,9 @@
-#include <ncurses.h>
+#include <ncursesw/ncurses.h>
 #include "miscwin.h"
 
 
 WINDOW* create_miscwin(){
-  WINDOW* miscwin = newwin(0,31,16,0);
+  WINDOW* miscwin = newwin(0,31,18,0);
 
   box(miscwin,0,0);
   mvwprintw(miscwin,0,9, "MISCELLANEOUS");

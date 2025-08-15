@@ -1,5 +1,4 @@
 #include "wires.h"
-#include "../windows/miscwin.h"
 
 int count_wire_color(char wires[], int n_wires, char color){
   int res = 0;
@@ -172,7 +171,7 @@ bool resolve_complex(bool red, bool blue, bool star, bool led, struct Bombattrs*
   bool C = true;
   bool D = true;
   bool S = !odd_serial_nr(bombattrs);
-  bool P = bombattrs->parallel_port;
+  bool P = has_port(bombattrs, "Parallel");
   bool B = bombattrs->nr_batteries >= 2;
 
   // interpret these as bitstr and access array

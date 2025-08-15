@@ -1,4 +1,4 @@
-#include <ncurses.h>
+#include <ncursesw/ncurses.h>
 #include <stdbool.h>
 #include "windows/infowin.h"
 #include "windows/contentwin.h"
@@ -6,6 +6,8 @@
 #include "windows/miscwin.h"
 
 #include "modules/wires.h"
+#include "modules/glyphs.h"
+#include "modules/button.h"
 
 
 int main(){
@@ -20,11 +22,11 @@ int main(){
   // use yellow for gray
   init_color(COLOR_YELLOW, 300, 300, 300);
   init_pair(1, COLOR_YELLOW, COLOR_BLACK);
-  
+
   // global bomb attributes
-  struct Bombattrs bombattrs;
-  bombattrs.parallel_port = -1;
+  struct Bombattrs bombattrs = {0};
   bombattrs.nr_batteries = -1;
+  bombattrs.mistakes = 0;
   bombattrs.serial_nr[0] = '-';
 
   // init windows
@@ -54,14 +56,20 @@ int main(){
       case 'S':
         set_serial(infowin, &bombattrs);
         break;
+      case 'M':
+        add_mistake(infowin, &bombattrs);
+        break;
       case 'B':
         set_batteries(infowin, &bombattrs);
         break;
       case 'P':
-        set_port(infowin, &bombattrs);
+        add_port(infowin, contentwin, &bombattrs);
+        break;
+      case 'I':
+        add_indicator(infowin, contentwin, &bombattrs);
         break;
 
-      // WIRES
+        // WIRES
       case 'w':
         c2 = wgetch(contentwin);
         refresh_selectwin(selectwin, true);
@@ -80,6 +88,14 @@ int main(){
             break;
         }
         refresh_selectwin(selectwin, false);
+        break;
+        // Button
+      case 'b':
+        button(contentwin, miscwin, &bombattrs);
+        break;
+        // GLYPHS
+      case 'g':
+        glyphs(contentwin, miscwin);
         break;
       default:
         break;

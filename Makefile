@@ -10,8 +10,8 @@ DEPS := $(OBJS:.o=.d)
 
 INC_DIRS := $(shell find $(SRC_DIR) -type d)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
-CFLAGS := $(INC_FLAGS) -MMD -MP $(shell pkg-config --cflags ncurses)
-LDFLAGS := $(shell pkg-config --libs ncurses)
+CFLAGS := $(INC_FLAGS) -MMD -MP $(shell pkg-config --cflags ncursesw)
+LDFLAGS := $(shell pkg-config --libs ncursesw)
 
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(CC) $(OBJS) -g -o $@ $(LDFLAGS)

@@ -2,7 +2,7 @@
 #define SELECT_H
 
 #include <stdbool.h>
-#include <ncurses.h>
+#include <ncursesw/ncurses.h>
 
 WINDOW* create_selectwin();
 

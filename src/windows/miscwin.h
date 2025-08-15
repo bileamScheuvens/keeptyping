@@ -1,7 +1,7 @@
 #ifndef MISC_H
 #define MISC_H
 
-#include <ncurses.h>
+#include <ncursesw/ncurses.h>
 
 WINDOW* create_miscwin();
 void log_to_misc(WINDOW* miscwin, char *content);

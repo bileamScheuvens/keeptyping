@@ -1,7 +1,7 @@
 #ifndef CONTENT_H
 #define CONTENT_H
 
-#include <ncurses.h>
+#include <ncursesw/ncurses.h>
 
 
 WINDOW* create_contentwin();
