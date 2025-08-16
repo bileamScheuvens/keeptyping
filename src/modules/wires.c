@@ -277,9 +277,7 @@ int resolve_sequential(int color, int dest, int seq_idx){
    * 
    * Format is [seq_idx] = 1(leading one)101 -> cut if a or c*/
 
-  if (seq_idx > 8){
-    return -1;
-  }
+  if (seq_idx > 8){ return -1; }
 
   int key[3][9] = {
     //red

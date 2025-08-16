@@ -8,6 +8,7 @@
 #include "modules/wires.h"
 #include "modules/glyphs.h"
 #include "modules/button.h"
+#include "modules/memory.h"
 
 
 int main(){
@@ -45,11 +46,11 @@ int main(){
     int c = wgetch(selectwin);
     int c2;
 
+    // debug
     char msg[36];
     sprintf(msg, "key pressed: %d - %c", c, c);
     log_to_misc(miscwin, msg);
     switch(c) {
-      // debug
       case 'q':
         running = false;
         break;
@@ -69,7 +70,7 @@ int main(){
         add_indicator(infowin, contentwin, &bombattrs);
         break;
 
-        // WIRES
+      // WIRES
       case 'w':
         c2 = wgetch(contentwin);
         refresh_selectwin(selectwin, true);
@@ -89,16 +90,22 @@ int main(){
         }
         refresh_selectwin(selectwin, false);
         break;
-        // Button
+      // Button
       case 'b':
         refresh_selectwin(selectwin, true);
         button(contentwin, miscwin, &bombattrs);
         refresh_selectwin(selectwin, false);
         break;
-        // GLYPHS
+      // GLYPHS
       case 'g':
         refresh_selectwin(selectwin, true);
         glyphs(contentwin, miscwin);
+        refresh_selectwin(selectwin, false);
+        break;
+      // MEMORY
+      case 'm':
+        refresh_selectwin(selectwin, true);
+        memory(contentwin, miscwin);
         refresh_selectwin(selectwin, false);
         break;
       default:

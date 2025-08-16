@@ -47,10 +47,9 @@ void button(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombattrs){
   // reminder for dependencies
   char *msgs[] = {"Button relies on", "- Indicators", "- Battery count"};
   log_to_misc_many(miscwin, msgs, 3);
-  log_to_misc(miscwin, "Button relies on Serial Nr!");
 
   // title and guide
-  mvwprintw(contentwin, 0, getmaxx(contentwin)/2 - 6, "GLYPHS");
+  mvwprintw(contentwin, 0, getmaxx(contentwin)/2 - 3, "GLYPHS");
   mvwprintw(contentwin, 1, 1, "Select Color, then Label.");
 
 
