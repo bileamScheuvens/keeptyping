@@ -91,11 +91,15 @@ int main(){
         break;
         // Button
       case 'b':
+        refresh_selectwin(selectwin, true);
         button(contentwin, miscwin, &bombattrs);
+        refresh_selectwin(selectwin, false);
         break;
         // GLYPHS
       case 'g':
+        refresh_selectwin(selectwin, true);
         glyphs(contentwin, miscwin);
+        refresh_selectwin(selectwin, false);
         break;
       default:
         break;

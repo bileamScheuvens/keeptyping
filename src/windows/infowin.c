@@ -19,9 +19,9 @@ bool has_port(struct Bombattrs* bombattrs, char port[]){
   return false;
 }
 
-bool has_indicator(struct Bombattrs* bombattrs, char port[], bool lit){
+bool has_indicator(struct Bombattrs* bombattrs, char indicator[], bool lit){
   for (int i=0; i<MAX_INDICATORS; i++){
-    if (strcmp(bombattrs->indicators[i], port)){
+    if (strcmp(bombattrs->indicators[i], indicator)){
       return bombattrs->indicator_lit[i];
     }
   }
@@ -121,7 +121,7 @@ void refresh_infowin(WINDOW* infowin, struct Bombattrs* bombattrs){
     if (!bombattrs->indicator_lit[i]){
       wattron(infowin, COLOR_PAIR(1));
     }
-    waddnstr(infowin, bombattrs->indicators[i], 3);
+    waddstr(infowin, bombattrs->indicators[i]);
     waddch(infowin, ' ');
     wattroff(infowin, COLOR_PAIR(1));
   }
@@ -181,6 +181,10 @@ void set_batteries(WINDOW* infowin, struct Bombattrs* bombattrs){
 }
 
 void add_port(WINDOW* infowin, WINDOW* contentwin, struct Bombattrs* bombattrs){
+  // cleanup 
+  wclear(contentwin);
+  box(contentwin,0,0);
+
   int half_width = getmaxx(contentwin)/2;
   // title 
   mvwprintw(contentwin, 0, half_width/2 - 7, "PORT SELECTION");
@@ -227,7 +231,11 @@ void add_port(WINDOW* infowin, WINDOW* contentwin, struct Bombattrs* bombattrs){
 
 
 void add_indicator(WINDOW* infowin, WINDOW* contentwin, struct Bombattrs* bombattrs){
-  char indicator[3];
+  // cleanup 
+  wclear(contentwin);
+  box(contentwin,0,0);
+
+  char indicator[4];
   bool is_lit = true;
   int NEW_ID_CONTENT = 12;
   int LIT_POS = 7;

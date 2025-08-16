@@ -83,6 +83,10 @@ int resolve_6wire(char wires[], struct Bombattrs* bombattrs){
 }
 
 void wires_regular(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombattrs){
+  // cleanup 
+  wclear(contentwin);
+  box(contentwin,0,0);
+
   char wires[6];
   int n_wires = 6;
 
@@ -322,6 +326,10 @@ int resolve_sequential(int color, int dest, int seq_idx){
 
 
 void wire_sequence(WINDOW* contentwin, WINDOW* miscwin){
+  // cleanup 
+  wclear(contentwin);
+  box(contentwin,0,0);
+
   init_pair(2, COLOR_RED, COLOR_BLACK); // red on black
   init_pair(3, COLOR_BLUE, COLOR_BLACK); // blue on black
 
@@ -329,10 +337,6 @@ void wire_sequence(WINDOW* contentwin, WINDOW* miscwin){
   int blue_count = 0;
   int black_count = 0;
   int cut;
-
-  // cleanup 
-  wclear(contentwin);
-  box(contentwin,0,0);
 
   // title and guide
   mvwprintw(contentwin, 0, getmaxx(contentwin)/2 - 6, "WIRE SEQUENCE");

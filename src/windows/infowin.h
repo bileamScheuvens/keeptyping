@@ -9,7 +9,7 @@
 
 #define SERIAL_NR_LEN 6
 #define MAX_PORTS 6
-#define MAX_PORT_LEN 11
+#define MAX_PORT_LEN 12
 #define MAX_INDICATORS 11
 
 struct Bombattrs {
@@ -17,7 +17,7 @@ struct Bombattrs {
   int nr_batteries;
   int mistakes;
   char ports[MAX_PORTS][MAX_PORT_LEN];
-  char indicators[MAX_INDICATORS][3];
+  char indicators[MAX_INDICATORS][4];
   bool indicator_lit[MAX_INDICATORS];
   time_t timer;
 };
