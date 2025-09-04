@@ -9,6 +9,8 @@
 #include "modules/glyphs.h"
 #include "modules/button.h"
 #include "modules/memory.h"
+#include "modules/labyrinth.h"
+#include "modules/simon_says.h"
 
 
 int main(){
@@ -52,6 +54,7 @@ int main(){
     log_to_misc(miscwin, msg);
     switch(c) {
       case 'q':
+        // TODO warn about aborting
         running = false;
         break;
       case 'S':
@@ -96,16 +99,43 @@ int main(){
         button(contentwin, miscwin, &bombattrs);
         refresh_selectwin(selectwin, false);
         break;
+      // SIMON SAYS OR SIX DIRECTIONS
+      case 's':
+        c2 = wgetch(contentwin);
+        refresh_selectwin(selectwin, true);
+        switch(c2){
+          // TODO Highlight partial match
+          case 'd':
+            break;
+          case 's':
+            simon_says(contentwin, selectwin, &bombattrs);
+            refresh_selectwin(selectwin, true);
+            break;
+        }
+        break;
       // GLYPHS
       case 'g':
         refresh_selectwin(selectwin, true);
         glyphs(contentwin, miscwin);
         refresh_selectwin(selectwin, false);
         break;
-      // MEMORY
+      // MEMORY OR MORSE
       case 'm':
+        c2 = wgetch(contentwin);
         refresh_selectwin(selectwin, true);
-        memory(contentwin, miscwin);
+        switch(c2){
+          case 'e':
+            memory(contentwin, miscwin);
+            break;
+          case 'o':
+            break;
+        }
+        refresh_selectwin(selectwin, false);
+        break;
+      // LABYRINTH
+      case 'l':
+        refresh_selectwin(selectwin, true);
+        labyrinth(contentwin, miscwin);
         refresh_selectwin(selectwin, false);
         break;
       default:

@@ -10,6 +10,17 @@ bool odd_serial_nr(struct Bombattrs* bombattrs){
   return -1;
 }
 
+bool serial_has_vowel(struct Bombattrs* bombattrs){
+  for (int i=0; i<= 5; i++){
+    char x = bombattrs->serial_nr[i];
+    if (x == 'A' || x == 'E' || x == 'I' || x == 'O' || x == 'U'){
+      return 1;
+    }
+  }
+  return 0;
+}
+
+
 bool has_port(struct Bombattrs* bombattrs, char port[]){
   for (int i=0; i<MAX_PORTS; i++){
     if (strcmp(bombattrs->ports[i], port)){

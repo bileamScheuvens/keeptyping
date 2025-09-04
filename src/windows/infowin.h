@@ -23,6 +23,7 @@ struct Bombattrs {
 };
 
 bool odd_serial_nr(struct Bombattrs* bombattrs);
+bool serial_has_vowel(struct Bombattrs* bombattrs);
 bool has_port(struct Bombattrs* bombattrs, char port[]);
 bool has_indicator(struct Bombattrs* bombattrs, char port[], bool lit);
 
