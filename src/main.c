@@ -11,6 +11,7 @@
 #include "modules/morse.h"
 #include "modules/simon_says.h"
 #include "modules/wires.h"
+#include "modules/password.h"
 
 int main() {
   // init TUI
@@ -136,6 +137,13 @@ int main() {
       // labyrinth(contentwin, miscwin);
       refresh_selectwin(selectwin, false);
       break;
+
+    // PASSWORD
+    case 'p':
+      refresh_selectwin(selectwin, true);
+      password(contentwin, miscwin);
+      refresh_selectwin(selectwin, false);
+
     default:
       break;
     }

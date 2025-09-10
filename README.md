@@ -14,6 +14,7 @@ Currently implemented modules:
 - [X] complicated wires
 - [X] wire sequences
 - [ ] maze (labyrinth)
-- [ ] passwords
+- [X] passwords
+- [ ] knob
 
 
