@@ -21,14 +21,11 @@ bool is_substring(const char short_str[], const char long_str[]) {
   // wrapping around the end of long_str
   int short_len = strlen(short_str);
   int long_len = strlen(long_str);
-  if (short_len > long_len) {
+  if (short_len > long_len + 1) {
     return false;
   }
 
   // Repeat long_str to catch the case where short_str is wrapping
-  // char repeating[2 * long_len + 1];
-  // snprintf(repeating, strlen(repeating), "%s %s", long_str, long_str);
-
   char repeating[2 * long_len + 2];
   strcpy(repeating, long_str);
   repeating[long_len] = ' ';
@@ -37,12 +34,13 @@ bool is_substring(const char short_str[], const char long_str[]) {
 }
 
 void clear_options(WINDOW *contentwin) {
-  // Wipes out previous options on screen
+  // Wipes out options on screen
   for (int i = 0; i < 17; i++) {
     mvwprintw(contentwin, 5 + i, 1, "             ");
   }
 }
 
+// main function loop
 void morse(WINDOW *contentwin, WINDOW *miscwin) {
 
   // cleanup
@@ -53,27 +51,16 @@ void morse(WINDOW *contentwin, WINDOW *miscwin) {
   mvwprintw(contentwin, 0, getmaxx(contentwin) / 2 - 3, "MORSE");
   curs_set(1);
 
-  mvwprintw(contentwin, 2, 1, "Morse: ______________________________");
+  mvwprintw(contentwin, 2, 1, "Morse: _____________________________");
   mvwprintw(contentwin, 4, 1, "Possible Solutions:");
 
+  // input loop
   char morse_input[MAXLEN_MORSE];
   memset(morse_input, '\0', MAXLEN_MORSE);
 
   for (int i = 0; i < MAXLEN_MORSE; i++) {
 
-    wmove(contentwin, 2, 8 + i);
-    int c = wgetch(contentwin);
-    if (c == 'q') {
-      return;
-    }
-
-    if (c != '.' && c != '-' && c != ' ') {
-      i--;
-      continue;
-    }
-    waddch(contentwin, c);
-    morse_input[i] = c;
-
+    // print options
     int found = 0;
     clear_options(contentwin);
 
@@ -83,5 +70,30 @@ void morse(WINDOW *contentwin, WINDOW *miscwin) {
         mvwprintw(contentwin, 5 + found, 2, "%s MHz", frequencies[j]);
       }
     }
+
+    wmove(contentwin, 2, 8 + i);
+    int c = wgetch(contentwin);
+
+    if (c == 'q') {
+      return;
+    }
+
+    if (c == 8 || c == 127) {
+      if (i > 0) {
+        i--;
+      }
+      wmove(contentwin, 2, 8 + i);
+      waddch(contentwin, '_');
+      morse_input[i] = '\0';
+      i--;
+      continue;
+    }
+
+    if (c != '.' && c != '-' && c != ' ') {
+      i--;
+      continue;
+    }
+    waddch(contentwin, c);
+    morse_input[i] = c;
   }
 }
