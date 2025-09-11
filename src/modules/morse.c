@@ -74,11 +74,14 @@ void morse(WINDOW *contentwin, WINDOW *miscwin) {
     wmove(contentwin, 2, 8 + i);
     int c = wgetch(contentwin);
 
-    if (c == 'q') {
+    switch (c) {
+    // quit morse module
+    case 'q':
       return;
-    }
 
-    if (c == 8 || c == 127) {
+    // delete/backspace
+    case 8:
+    case 127:
       if (i > 0) {
         i--;
       }
@@ -87,13 +90,18 @@ void morse(WINDOW *contentwin, WINDOW *miscwin) {
       morse_input[i] = '\0';
       i--;
       continue;
-    }
 
-    if (c != '.' && c != '-' && c != ' ') {
+    // morse characters
+    case '.':
+    case '-':
+    case ' ':
+      waddch(contentwin, c);
+      morse_input[i] = c;
+      continue;
+
+    default:
       i--;
       continue;
     }
-    waddch(contentwin, c);
-    morse_input[i] = c;
   }
 }
