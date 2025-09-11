@@ -7,11 +7,12 @@
 
 #include "modules/button.h"
 #include "modules/glyphs.h"
+#include "modules/knob.h"
 #include "modules/memory.h"
 #include "modules/morse.h"
+#include "modules/password.h"
 #include "modules/simon_says.h"
 #include "modules/wires.h"
-#include "modules/password.h"
 
 int main() {
   // init TUI
@@ -143,6 +144,14 @@ int main() {
       refresh_selectwin(selectwin, true);
       password(contentwin, miscwin);
       refresh_selectwin(selectwin, false);
+      break;
+
+    // KNOB
+    case 'k':
+      refresh_selectwin(selectwin, true);
+      knob(contentwin, miscwin);
+      refresh_selectwin(selectwin, false);
+      break;
 
     default:
       break;
