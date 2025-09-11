@@ -18,3 +18,11 @@ Currently implemented modules:
 - [ ] knob
 
 
+
+
+### Morse Code
+
+Enter morse code (. for short, - for long and space between character)
+Possible frequencies that match the input morse are displayed.
+It is not necessary to start with the first character, i.e. the matching is invariant to the starting point.
+Treat the long restart pause as pause between characters (space). 
