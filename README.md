@@ -10,7 +10,7 @@ Currently implemented modules:
 - [X] simon says
 - [ ] whos on first (six directions)
 - [X] memory
-- [ ] morse code
+- [X] morse code
 - [X] complicated wires
 - [X] wire sequences
 - [ ] maze (labyrinth)
