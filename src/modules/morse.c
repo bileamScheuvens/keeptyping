@@ -77,6 +77,7 @@ void morse(WINDOW *contentwin, WINDOW *miscwin) {
     switch (c) {
     // quit morse module
     case 'q':
+      curs_set(0);
       return;
 
     // delete/backspace
@@ -104,4 +105,5 @@ void morse(WINDOW *contentwin, WINDOW *miscwin) {
       continue;
     }
   }
+  curs_set(0);
 }

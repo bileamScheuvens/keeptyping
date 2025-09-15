@@ -13,6 +13,7 @@
 #include "modules/password.h"
 #include "modules/simon_says.h"
 #include "modules/wires.h"
+#include "modules/labyrinth.h"
 
 int main() {
   // init TUI
@@ -135,7 +136,7 @@ int main() {
     // LABYRINTH
     case 'l':
       refresh_selectwin(selectwin, true);
-      // labyrinth(contentwin, miscwin);
+      labyrinth(contentwin, miscwin);
       refresh_selectwin(selectwin, false);
       break;
 
