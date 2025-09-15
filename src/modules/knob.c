@@ -21,11 +21,12 @@ const struct LedConfig configs[] = {
   {{true, false, true, true, false, false, true, true, true, false, true, false}, "Right"}
 };
 
-int* cursor_position(int index, int x, int y) {
-  // given index, calculates x and y position
-  // uses output parameters to avoid 
-  x = 13 + index % 6;
-  y = 3 + index / 6;
+int cursor_position_x(int index) {
+  return 13 + index % 6;
+}
+
+int cursor_position_y(int index) {
+  return 3 + index / 6;
 }
 
 void knob(WINDOW *contentwin, WINDOW *miscwin) {
@@ -46,8 +47,8 @@ void knob(WINDOW *contentwin, WINDOW *miscwin) {
 
   bool input[13];
   for (int index = 0; index < 12; index++) {
-    int x, y;
-    cursor_position(index, x, y);
+    int x = cursor_position_x(index);
+    int y = cursor_position_y(index);
     wmove(contentwin, y, x);
     int c = wgetch(contentwin);
 
@@ -67,4 +68,11 @@ void knob(WINDOW *contentwin, WINDOW *miscwin) {
         index--;
     }
   }
+  char position[3] = "Up";
+
+  char* string;
+  asprintf(string, "Knob Position: %s", position);
+  mvwprintw(contentwin, 7, 2, string);
+  wrefresh(contentwin);
+  return;
 }
