@@ -32,7 +32,7 @@ struct Labyrinth get_labyrinth_layout(int idx){
       strcpy(labyrinth.layout[7],  "|   |   | | |");
       strcpy(labyrinth.layout[8],  "| +-+ +-+ | |");
       strcpy(labyrinth.layout[9],  "| | | |   | |");
-      strcpy(labyrinth.layout[10], "| | | |  -+ |");
+      strcpy(labyrinth.layout[10], "| | | | --+ |");
       strcpy(labyrinth.layout[11], "| |   |     |");
       strcpy(labyrinth.layout[12], "+-----------+");
       break;

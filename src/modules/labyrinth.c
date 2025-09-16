@@ -28,20 +28,20 @@ int labpos_from_char(char c){
   return 2 * (c - '0') - 1;
 }
 
-void draw_labyrinth(WINDOW* contentwin, char points[9]){
+void draw_labyrinth(WINDOW* contentwin, char points[9], bool draw_overlay){
   int LAB_Y = 4;
   int LAB_X = 30;
   struct Labyrinth lab = resolve_labyrinth(points[0], points[1], points[2], points[3]);
 
   for (int i=0; i<13; i++){
     mvwprintw(contentwin, LAB_Y+i, LAB_X, "%s", lab.layout[i]);
+    // valid position overlay
+    for (int j=0; j<6; j++){
+      if (draw_overlay && i % 2 == 1){
+        mvwprintw(contentwin, LAB_Y+i, LAB_X + 2*j + 1, "*");
+      }
+    }
   }
-  int x1= points[0];
-  int y1 = points[1];
-  int x2 =  points[2];
-  int y2 = points[3];
-  int idx = min(concat_point(x1, y1, x2, y2), concat_point(x2, y2, x1, y1)) % 24;
-  // mvwprintw(contentwin, LAB_Y, LAB_X, "%d",idx);
 
   // Start
   mvwprintw(contentwin, LAB_Y+labpos_from_char(points[5]), LAB_X+labpos_from_char(points[4]), "O");
@@ -89,7 +89,8 @@ void labyrinth(WINDOW* contentwin, WINDOW* miscwin){
     redraw_labyrinth_specification(contentwin, points);
   };
 
-  draw_labyrinth(contentwin, points);
+  // TODO make overlay toggleable from UI
+  draw_labyrinth(contentwin, points, true);
 
 
   wrefresh(contentwin);

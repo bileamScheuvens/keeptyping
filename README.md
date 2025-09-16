@@ -13,7 +13,7 @@ Currently implemented modules:
 - [X] morse code
 - [X] complicated wires
 - [X] wire sequences
-- [ ] maze (labyrinth)
+- [X] maze (labyrinth)
 - [X] passwords
 - [ ] knob
 
