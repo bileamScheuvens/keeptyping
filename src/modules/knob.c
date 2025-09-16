@@ -70,9 +70,9 @@ void knob(WINDOW *contentwin, WINDOW *miscwin) {
   }
   char position[3] = "Up";
 
-  char* string;
-  asprintf(string, "Knob Position: %s", position);
-  mvwprintw(contentwin, 7, 2, string);
+  // char* string;
+  // asprintf(string, "Knob Position: %s", position);
+  // mvwprintw(contentwin, 7, 2, string);
   wrefresh(contentwin);
   return;
 }
