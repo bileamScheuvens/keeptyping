@@ -14,6 +14,7 @@
 #include "modules/simon_says.h"
 #include "modules/wires.h"
 #include "modules/labyrinth.h"
+#include "modules/six_directions.h"
 
 int main() {
   // init TUI
@@ -106,9 +107,10 @@ int main() {
       switch (c2) {
       // TODO Highlight partial match
       case 'd':
+        six_directions(contentwin, miscwin);
         break;
       case 's':
-        simon_says(contentwin, selectwin, &bombattrs);
+        simon_says(contentwin, miscwin, &bombattrs);
         refresh_selectwin(selectwin, true);
         break;
       }
