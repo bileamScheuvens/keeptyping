@@ -1,6 +1,7 @@
 #include "six_directions.h"
 
-const char *stage_1_directions[27] = {
+const char *stage_1_key[28] = {
+  "         B L",
   "BLANK    M R",
   "C        T R",
   "CEE      B R",
@@ -31,34 +32,34 @@ const char *stage_1_directions[27] = {
 };
 
 const char *stage_2_key[28] = {
-  "BLANK",
-  "DONE",
-  "FIRST",
-  "HOLD",
-  "LEFT",
-  "LIKE",
-  "MIDDLE",
-  "NEXT",
-  "NO  ",
-  "NOTHING",
-  "OKAY",
-  "PRESS",
-  "READ",
-  "RIGHT",
-  "SURE",
-  "U   ",
-  "UH HUH",
-  "UH UH",
-  "UHHH",
-  "UR  ",
-  "WAIT",
-  "WHAT",
-  "WHAT?",
+  "BLANK ",
+  "DONE ",
+  "FIRST ",
+  "HOLD ",
+  "LEFT ",
+  "LIKE ",
+  "MIDDLE ",
+  "NEXT ",
+  "NO ",
+  "NOTHING ",
+  "OKAY ",
+  "PRESS ",
+  "READ ",
+  "RIGHT ",
+  "SURE ",
+  "U ",
+  "UH HUH ",
+  "UH UH ",
+  "UHHH ",
+  "UR ",
+  "WAIT ",
+  "WHAT ",
+  "WHAT? ",
   "YES ",
-  "YOU ARE",
+  "YOU ARE ",
   "YOU ",
-  "YOUR",
-  "YOU'RE",
+  "YOUR ",
+  "YOU'RE ",
 };
 
 const char *stage_2_val[28] = {
@@ -101,18 +102,42 @@ bool word_possible(const char *word, char letters[8]){
   return true;
 }
 
-void draw_stage_1_directions(WINDOW* contentwin, char letters[8]){
-  for (int i=0; i<26; i++){
+void draw_remaining_options(WINDOW* contentwin, const char *options[28], char letters[8]){
+  for (int i=0; i<28; i++){
     mvwprintw(contentwin, 3+i%13, 25+15*(i>13), "             ");
-    if (!word_possible(stage_1_directions[i], letters)) continue;
-    mvwprintw(contentwin, 3+i%13, 25+15*(i>13), "%s", stage_1_directions[i]);
+    if (!word_possible(options[i], letters)) continue;
+    mvwprintw(contentwin, 3+i%13, 25+15*(i>13), "%s", options[i]);
   }
 }
 
-void six_directions_stage_1(WINDOW* contentwin){
+void draw_last_solution(WINDOW* contentwin, const char *options[28], const char *values[28], char letters[8]){
+  bool has_solution = false;
+  const char *solution = "";
+
+  wmove(contentwin, 17, 1);
+  wclrtoeol(contentwin);
+  for (int i=0; i<28; i++){
+    if (word_possible(options[i], letters)){
+      // if second solution encountered, terminate
+      if (has_solution) return;
+      has_solution = true;
+      solution = values[i];
+    }
+  }
+  if (strcmp(solution, "") == 0) return;
+  mvwprintw(contentwin, 17, 1, "Order: %s", solution);
+}
+
+void six_directions(WINDOW* contentwin, WINDOW* miscwin){
   // cleanup
   wclear(contentwin);
   box(contentwin,0,0);
+
+  // title
+  mvwprintw(contentwin, 0, getmaxx(contentwin)/2 - 7, "SIX DIRECTIONS");
+
+
+  bool is_stage_2 = false;
 
   char letters[8];
   memset(letters, '_', 8);
@@ -122,10 +147,16 @@ void six_directions_stage_1(WINDOW* contentwin){
   int c;
   // gather input
   for (int i=0; i<8; i++){
+    mvwprintw(contentwin, 1, 1, "STAGE: %d", 1 + is_stage_2);
     // input prompt
     mvwprintw(contentwin, 3, 1, "Displayed: %s", letters);
     // filtered result
-    draw_stage_1_directions(contentwin, letters);
+    if (is_stage_2){
+      draw_remaining_options(contentwin, stage_2_key, letters);
+      draw_last_solution(contentwin, stage_2_key, stage_2_val, letters);
+    } else {
+      draw_remaining_options(contentwin, stage_1_key, letters);
+    }
 
     wmove(contentwin, 3, 12+i);
     c = wgetch(contentwin);
@@ -140,9 +171,14 @@ void six_directions_stage_1(WINDOW* contentwin){
         i = -1;
         break;
       case 27: // ESCAPE
-      case 9: // TAB
       case 10: // ENTER
         return;
+      case 9: // TAB
+        // switch stage
+        is_stage_2 = !is_stage_2;
+        i = -1;
+        memset(letters, '_', 8);
+        break;
       default:
         c = c > 90 ? c-32 : c; // transform to uppercase
         letters[i] = c;
@@ -150,12 +186,5 @@ void six_directions_stage_1(WINDOW* contentwin){
     }
   }
   curs_set(0);
-}
-
-void six_directions(WINDOW* contentwin, WINDOW* miscwin){
-  six_directions_stage_1(contentwin);
-
-
-  
 }
 

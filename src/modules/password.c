@@ -125,7 +125,7 @@ void password(WINDOW* contentwin, WINDOW* miscwin){
     };
 
   };
-  
+  curs_set(0);
   // wrefresh(contentwin);
 }
 

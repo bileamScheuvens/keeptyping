@@ -8,7 +8,7 @@ Currently implemented modules:
 - [X] button
 - [ ] keypad (glyphs)
 - [X] simon says
-- [ ] whos on first (six directions)
+- [X] whos on first (six directions)
 - [X] memory
 - [X] morse code
 - [X] complicated wires

@@ -46,6 +46,7 @@ int main() {
   // main loop
   bool running = true;
   while (running) {
+    curs_set(0);
     int c = wgetch(selectwin);
     int c2;
 
@@ -106,13 +107,14 @@ int main() {
       refresh_selectwin(selectwin, true);
       switch (c2) {
       // TODO Highlight partial match
-      case 'd':
-        six_directions(contentwin, miscwin);
-        break;
-      case 's':
-        simon_says(contentwin, miscwin, &bombattrs);
-        refresh_selectwin(selectwin, true);
-        break;
+        case 'd':
+          six_directions(contentwin, miscwin);
+          refresh_selectwin(selectwin, false);
+          break;
+        case 's':
+          simon_says(contentwin, miscwin, &bombattrs);
+          refresh_selectwin(selectwin, false);
+          break;
       }
       break;
     // GLYPHS

@@ -243,6 +243,7 @@ void wires_complex(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombat
       case 'q':
       case 10: // ENTER
       case 27: // Escape
+        curs_set(0);
         return;
         break;
       case 'r':
