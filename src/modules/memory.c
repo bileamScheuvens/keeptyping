@@ -104,7 +104,7 @@ struct StageResult resolve_stage(int stage, int displayed, int digits[], int pos
   return sr;
 }
 
-void memory_get_compliment(WINDOW * contentwin, int given[], int other[], int GIVENX, int OTHERX, int BASEY, int stage, int val){
+void memory_get_complement(WINDOW * contentwin, int given[], int other[], int GIVENX, int OTHERX, int BASEY, int stage, int val){
   /* Write given hint and get complement. 
    * Example: Click position 2 -> given: pos, other: digit, val: 2 
    */
@@ -162,7 +162,7 @@ void memory(WINDOW* contentwin, WINDOW* miscwin){
     // if hint gives position, draw and wait for digit
     // TODO rewrite this with less redundancy
     if (sr.is_pos) {
-      memory_get_compliment(contentwin, positions, digits, POSX, DIGX, BASEY, stage, sr.val);
+      memory_get_complement(contentwin, positions, digits, POSX, DIGX, BASEY, stage, sr.val);
       // positions[stage] = sr.val;
       // mvwprintw(contentwin, BASEY+stage, POSX, "%d", sr.val);
       // wmove(contentwin, BASEY+stage, DIGX);
@@ -174,7 +174,7 @@ void memory(WINDOW* contentwin, WINDOW* miscwin){
       // digits[stage] = c;
       // mvwprintw(contentwin, BASEY+stage, DIGX, "%d", c);
     } else { 
-      memory_get_compliment(contentwin, positions, digits, POSX, DIGX, BASEY, stage, sr.val);
+      memory_get_complement(contentwin, positions, digits, DIGX, POSX, BASEY, stage, sr.val);
       // else, draw and wait for position
       // digits[stage] = sr.val;
       // mvwprintw(contentwin, BASEY+stage, DIGX, "%d", sr.val);

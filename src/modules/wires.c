@@ -216,6 +216,10 @@ void set_bool_and_draw(WINDOW* contentwin, bool *complex_attr, int pos, bool tar
 }
 
 void wires_complex(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombattrs){
+  // cleanup
+  wclear(contentwin);
+  box(contentwin, 0,0);
+
   char *msgs[] = {"Complex wires rely on", "- Serial Nr", "- Parallel Port", "- Battery count"};
   log_to_misc_many(miscwin, msgs, 4);
 
@@ -236,6 +240,7 @@ void wires_complex(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombat
   mvwprintw(contentwin, 2, 1, "Toggle: (r)ed [ ], (b)lue [ ], (s)tar [ ], (l)ed [ ] |  (c)lear  |");
   mvwprintw(contentwin, 7, 15, "CUT WIRE -> %b", cut);
   wrefresh(contentwin);
+
 
   while(1){
     int c = wgetch(contentwin);
@@ -383,15 +388,15 @@ void wire_sequence(WINDOW* contentwin, WINDOW* miscwin){
         blue_count += 1;
         break;
       case 'j':
-        cut = resolve_sequential(2, 100, blue_count);
+        cut = resolve_sequential(2, 100, black_count);
         black_count += 1;
         break;
       case 'k':
-        cut = resolve_sequential(2, 10, blue_count);
+        cut = resolve_sequential(2, 10, black_count);
         black_count += 1;
         break;
       case 'l':
-        cut = resolve_sequential(2, 1, blue_count);
+        cut = resolve_sequential(2, 1, black_count);
         black_count += 1;
         break;
     }

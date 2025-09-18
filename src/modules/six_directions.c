@@ -44,7 +44,7 @@ const char *stage_2_key[28] = {
   "NOTHING ",
   "OKAY ",
   "PRESS ",
-  "READ ",
+  "READY ",
   "RIGHT ",
   "SURE ",
   "U ",

@@ -17,7 +17,7 @@ int get_valid_num(WINDOW* contentwin){
   }
 }
 
-bool hold_button(int color, int label, struct Bombattrs* bombattrs){
+bool hold_button(int color, int label, struct Bombattrs* bombattrs, WINDOW* contentwin){
   if (color == BLUE && label == ABORT){
     return true;
   }
@@ -63,12 +63,12 @@ void button(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombattrs){
     return;
   }
   int label = get_valid_num(contentwin);
-  if (color == -1){
+  if (label == -1){
     return;
   }
 
 
-  if (hold_button(color, label, bombattrs)){
+  if (hold_button(color, label, bombattrs, contentwin)){
     mvwprintw(contentwin, 5, 5, "HOLD & RELEASE ON:");
     mvwprintw(contentwin, 6, 5, "- BLUE: 4");
     mvwprintw(contentwin, 7, 5, "- YELLOW: 5");

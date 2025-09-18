@@ -38,15 +38,17 @@ void draw_labyrinth(WINDOW* contentwin, char points[9], bool draw_overlay){
     // valid position overlay
     for (int j=0; j<6; j++){
       if (draw_overlay && i % 2 == 1){
+        wattron(contentwin, COLOR_PAIR(1));
         mvwprintw(contentwin, LAB_Y+i, LAB_X + 2*j + 1, "*");
+        wattroff(contentwin, COLOR_PAIR(1));
       }
     }
   }
 
   // Start
-  mvwprintw(contentwin, LAB_Y+labpos_from_char(points[5]), LAB_X+labpos_from_char(points[4]), "O");
+  mvwprintw(contentwin, LAB_Y+(12-labpos_from_char(points[5])), LAB_X+labpos_from_char(points[4]), "O");
   // Target
-  mvwprintw(contentwin, LAB_Y+labpos_from_char(points[7]), LAB_X+labpos_from_char(points[6]), "X");
+  mvwprintw(contentwin, LAB_Y+(12-labpos_from_char(points[7])), LAB_X+labpos_from_char(points[6]), "X");
 }
 
 

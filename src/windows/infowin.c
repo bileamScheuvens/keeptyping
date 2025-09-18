@@ -23,7 +23,7 @@ bool serial_has_vowel(struct Bombattrs* bombattrs){
 
 bool has_port(struct Bombattrs* bombattrs, char port[]){
   for (int i=0; i<MAX_PORTS; i++){
-    if (strcmp(bombattrs->ports[i], port)){
+    if (strcmp(bombattrs->ports[i], port) == 0){
       return true;
     }
   }
@@ -91,8 +91,8 @@ void refresh_infowin(WINDOW* infowin, struct Bombattrs* bombattrs){
   }
   // ----------------- NR BATTERIES ---------------------
   mvwprintw(infowin, 1, BATTERY_LABEL, "(B)atteries:");
-  if (bombattrs->nr_batteries >=0) {
-    mvwprintw(infowin, 1, BATTERY_CONTENT, "%d", bombattrs->nr_batteries-1);
+  if (bombattrs->nr_batteries !=-1) {
+    mvwprintw(infowin, 1, BATTERY_CONTENT, "%d", bombattrs->nr_batteries);
   } else {
     mvwprintw(infowin, 1, BATTERY_CONTENT, "NULL");
   }
@@ -185,7 +185,7 @@ void set_batteries(WINDOW* infowin, struct Bombattrs* bombattrs){
   int c = wgetch(infowin);
   c -= '0';
   if (0<=c && c<=9){
-    bombattrs->nr_batteries = c+1;
+    bombattrs->nr_batteries = c;
   }
   curs_set(0);
   refresh_infowin(infowin, bombattrs);
@@ -236,7 +236,7 @@ void add_port(WINDOW* infowin, WINDOW* contentwin, struct Bombattrs* bombattrs){
         strcpy(bombattrs->ports[5], "STEREO RCA");
         break;
     }
-  refresh_infowin(infowin, bombattrs);
+    refresh_infowin(infowin, bombattrs);
   }
 }
 
