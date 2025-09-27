@@ -5,12 +5,9 @@
 #include "../windows/infowin.h"
 #include "../windows/miscwin.h"
 
+// config for color labels
+#include "../config.h"
 
-#define WHITE 1
-#define BLACK 2
-#define BLUE 3
-#define RED 4
-#define YELLOW 5
 
 #define ABORT 1
 #define DETONATE 2

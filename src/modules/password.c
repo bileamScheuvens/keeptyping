@@ -64,9 +64,10 @@ void draw_word(WINDOW* contentwin, int y, int x, char letters[5][6], const char 
     }
 
     // otherwise print char colored by whether its present
-    if (!is_present){ wattron(contentwin, COLOR_PAIR(1)); };
+    disable_text(contentwin, !is_present);
+    
     mvwaddch(contentwin, y, x+i, c);
-    wattroff(contentwin, COLOR_PAIR(1));
+    wattron(contentwin, COLOR_PAIR(PAIR_REGULAR));
   }
 }
 

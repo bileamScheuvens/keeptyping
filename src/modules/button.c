@@ -54,7 +54,7 @@ void button(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombattrs){
 
 
   // TODO indicate whats currently being selected
-  mvwprintw(contentwin, 2, 1, "(1)WHITE (2)BLACK    (3)BLUE (4)RED    (5)YELLOW");
+  mvwprintw(contentwin, 2, 1, "(1)RED (2)BLUE  (3)BLACK (4)WHITE     (5)YELLOW");
   mvwprintw(contentwin, 3, 1, "(1)ABORT (2)DETONATE (3)HOLD (4)PRESS");
 
   // TODO indicate selections

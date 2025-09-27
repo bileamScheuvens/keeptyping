@@ -6,6 +6,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include <string.h>
+#include "../config.h"
 
 #define SERIAL_NR_LEN 6
 #define MAX_PORTS 6

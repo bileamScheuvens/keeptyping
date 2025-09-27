@@ -38,9 +38,9 @@ void draw_labyrinth(WINDOW* contentwin, char points[9], bool draw_overlay){
     // valid position overlay
     for (int j=0; j<6; j++){
       if (draw_overlay && i % 2 == 1){
-        wattron(contentwin, COLOR_PAIR(1));
+        wattron(contentwin, COLOR_PAIR(PAIR_DISABLED));
         mvwprintw(contentwin, LAB_Y+i, LAB_X + 2*j + 1, "*");
-        wattroff(contentwin, COLOR_PAIR(1));
+        wattron(contentwin, COLOR_PAIR(PAIR_REGULAR));
       }
     }
   }

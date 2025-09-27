@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <ncursesw/ncurses.h>
+#include "../config.h"
 
 WINDOW* create_selectwin();
 

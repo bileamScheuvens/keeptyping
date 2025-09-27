@@ -74,5 +74,6 @@ void knob(WINDOW *contentwin, WINDOW *miscwin) {
   // asprintf(string, "Knob Position: %s", position);
   // mvwprintw(contentwin, 7, 2, string);
   wrefresh(contentwin);
+  curs_set(0);
   return;
 }

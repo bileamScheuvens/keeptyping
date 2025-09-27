@@ -5,6 +5,8 @@
 #include "../windows/infowin.h"
 #include "../windows/miscwin.h"
 
+#include "../config.h"
+
 void labyrinth(WINDOW* contentwin, WINDOW* miscwin);
 
 

@@ -11,9 +11,7 @@ void refresh_selectwin(WINDOW* selectwin, bool disabled){
   box(selectwin, 0,0);
 
   mvwprintw(selectwin, 0, 7, "MODULE SELECTION");
-  if (disabled){
-    wattron(selectwin, COLOR_PAIR(1));
-  }
+  disable_text(selectwin, disabled);
   mvwprintw(selectwin, 1, 1, "- (w)ires -+-- (r)egular");
   mvwprintw(selectwin, 2, 1, "-          +-- (c)omplicated");
   mvwprintw(selectwin, 3, 1, "-          \\-- (s)equences");
@@ -27,5 +25,5 @@ void refresh_selectwin(WINDOW* selectwin, bool disabled){
   mvwprintw(selectwin, 11, 1, "- (p)assword");
   mvwprintw(selectwin, 12, 1, "- (k)nob");
   wrefresh(selectwin);
-  wattroff(selectwin, COLOR_PAIR(1));
+  disable_text(selectwin, false);
 }

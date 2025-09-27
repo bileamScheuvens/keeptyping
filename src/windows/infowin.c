@@ -129,12 +129,10 @@ void refresh_infowin(WINDOW* infowin, struct Bombattrs* bombattrs){
     if (bombattrs->indicators[i][0] == '\0'){
       continue;
     }
-    if (!bombattrs->indicator_lit[i]){
-      wattron(infowin, COLOR_PAIR(1));
-    }
+    disable_text(infowin, !bombattrs->indicator_lit[i]);
     waddstr(infowin, bombattrs->indicators[i]);
     waddch(infowin, ' ');
-    wattroff(infowin, COLOR_PAIR(1));
+    disable_text(infowin, false);
   }
 
   wrefresh(infowin);
