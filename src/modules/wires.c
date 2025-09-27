@@ -1,4 +1,6 @@
 #include "wires.h"
+#include "button.h"
+#include "ncurses.h"
 
 int count_wire_color(char wires[], int n_wires, char color){
   int res = 0;
@@ -278,14 +280,15 @@ void wires_complex(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombat
 
 int resolve_sequential(int color, int dest, int seq_idx){
   /* Lookup tables for sequential wires. 
-   * Colors are 0 - red, 1 - blue, 2 - black. 
+   * Colors are 1 - red, 2 - blue, 3 - black. 
    * Dest is 100 -> A, 10 -> B, 1 -> C.
    * 
    * Format is [seq_idx] = 1(leading one)101 -> cut if a or c*/
 
   if (seq_idx > 8){ return -1; }
 
-  int key[3][9] = {
+  int key[4][9] = {
+    {},
     //red
     { 
       1001,
@@ -328,32 +331,25 @@ int resolve_sequential(int color, int dest, int seq_idx){
   return (raw_key / dest) % 10;
 }
 
+void wire_sequence_alt(WINDOW* contentwin, WINDOW* miscwin){
+  /* Alternative controls for sequence wires. */
 
-void wire_sequence(WINDOW* contentwin, WINDOW* miscwin){
-  // cleanup 
-  wclear(contentwin);
-  box(contentwin,0,0);
-
-  init_pair(2, COLOR_RED, COLOR_BLACK); // red on black
-  init_pair(3, COLOR_BLUE, COLOR_BLACK); // blue on black
+  // guide
+  mvwprintw(contentwin, 1, 1, "Specify color and destination:");
+  mvwprintw(contentwin, 2, 5, "red     blue      black");
+  wattron(contentwin, COLOR_PAIR(PAIR_REDONBLACK));
+  mvwprintw(contentwin, 3, 4, "A B C");
+  wattron(contentwin, COLOR_PAIR(PAIR_BLUEONBLACK));
+  mvwprintw(contentwin, 3, 13, "A B C");
+  wattron(contentwin, COLOR_PAIR(PAIR_REGULAR));
+  mvwprintw(contentwin, 3, 23, "A B C");
+  mvwprintw(contentwin, 4, 4, "a s d    f g h     j k l");
+  wrefresh(contentwin);
 
   int red_count = 0;
   int blue_count = 0;
   int black_count = 0;
-  int cut;
-
-  // title and guide
-  mvwprintw(contentwin, 0, getmaxx(contentwin)/2 - 6, "WIRE SEQUENCE");
-  mvwprintw(contentwin, 1, 1, "Specify color and destination:");
-  mvwprintw(contentwin, 2, 5, "red     blue      black");
-  wattron(contentwin, COLOR_PAIR(2));
-  mvwprintw(contentwin, 3, 4, "A B C");
-  wattron(contentwin, COLOR_PAIR(3));
-  mvwprintw(contentwin, 3, 13, "A B C");
-  wattroff(contentwin, COLOR_PAIR(3));
-  mvwprintw(contentwin, 3, 23, "A B C");
-  mvwprintw(contentwin, 4, 4, "a s d    f g h     j k l");
-  wrefresh(contentwin);
+  int cut = -1;
 
   while (1){
     int c = wgetch(contentwin);
@@ -400,15 +396,130 @@ void wire_sequence(WINDOW* contentwin, WINDOW* miscwin){
         black_count += 1;
         break;
     }
-  mvwprintw(contentwin, 5, 1, "Count:");
-  mvwprintw(contentwin, 6, 6, "%d", red_count);
-  mvwprintw(contentwin, 6, 15, "%d", blue_count);
-  mvwprintw(contentwin, 6, 25, "%d", black_count);
-  mvwprintw(contentwin, 8, 15, "CUT WIRE -> %d   ", cut);
-  if (cut<0){
-    mvwprintw(contentwin, 8, 15, "INVALID SEQUENCE");
+    mvwprintw(contentwin, 5, 1, "Count:");
+    mvwprintw(contentwin, 6, 6, "%d", red_count);
+    mvwprintw(contentwin, 6, 15, "%d", blue_count);
+    mvwprintw(contentwin, 6, 25, "%d", black_count);
+
+    // display result
+    switch (cut) {
+      case 0:
+        wattron(contentwin, COLOR_PAIR(PAIR_GREENONBLACK));
+        mvwprintw(contentwin, 8, 15, "NO CUT     ");
+        wattron(contentwin, COLOR_PAIR(PAIR_REGULAR));
+        break;
+      case 1:
+        wattron(contentwin, COLOR_PAIR(PAIR_GREENONBLACK));
+        mvwprintw(contentwin, 8, 15, "CUT        ");
+        wattron(contentwin, COLOR_PAIR(PAIR_REGULAR));
+        break;
+      default:
+        mvwprintw(contentwin, 8, 15, "INVALID SEQ");
+    }
+    wrefresh(contentwin);
   }
+}
+
+
+
+void draw_wire_seq_select(WINDOW* contentwin, int color, int dest){
+  /* Redraw guide with highlights */
+  disable_text(contentwin, color != RED);
+  mvwprintw(contentwin, 3, 5, "(r)ed");
+  disable_text(contentwin, color != BLUE);
+  mvwprintw(contentwin, 3, 12, "(b)lue");
+  disable_text(contentwin, color != BLACK);
+  mvwprintw(contentwin, 3, 20, "blac(k)");
+  disable_text(contentwin, false);
+
+  disable_text(contentwin, dest != DESTA);
+  mvwprintw(contentwin, 4, 5, "(1) A");
+  disable_text(contentwin, dest != DESTB);
+  mvwprintw(contentwin, 4, 12, "(2) B");
+  disable_text(contentwin, dest != DESTC);
+  mvwprintw(contentwin, 4, 18, "(3) C");
+  disable_text(contentwin, false);
+}
+
+void wire_sequence(WINDOW* contentwin, WINDOW* miscwin){
+  // cleanup 
+  wclear(contentwin);
+  box(contentwin,0,0);
+
+  int counts[4] = {0,0,0,0};
+
+  int color = -1;
+  int dest =-1;
+  int cut = -1;
+
+  // title 
+  mvwprintw(contentwin, 0, getmaxx(contentwin)/2 - 6, "WIRE SEQUENCE");
+  // branch into alt control scheme
+  if (settings.alt_sequence_wires){
+    return wire_sequence_alt(contentwin, miscwin);
+  }
+
+  // guide
+  mvwprintw(contentwin, 1, 1, "Specify color and destination:");
+  draw_wire_seq_select(contentwin, color, dest);
   wrefresh(contentwin);
+
+  while (1){
+    int c = wgetch(contentwin);
+    switch(c){
+      case 'q':
+      case 10: // ENTER
+      case 27: // Escape
+        return;
+        break;
+      case 'r':
+        color = RED;
+        break;
+      case 'b':
+        color = BLUE;
+        break;
+      case 'k':
+        color = BLACK;
+        break;
+      case '1':
+        dest = DESTA;
+        break;
+      case '2':
+        dest = DESTB;
+        break;
+      case '3':
+        dest = DESTC;
+        break;
+    }
+    draw_wire_seq_select(contentwin, color, dest);
+
+    // if both selected show results and reset
+    if (color != -1 && dest != -1){
+      cut = resolve_sequential(color, dest, counts[color]);
+      // display result
+      switch (cut) {
+        case 0:
+          wattron(contentwin, COLOR_PAIR(PAIR_REDONBLACK));
+          mvwprintw(contentwin, 8, 15, "NO CUT     ");
+          wattron(contentwin, COLOR_PAIR(PAIR_REGULAR));
+          break;
+        case 1:
+          wattron(contentwin, COLOR_PAIR(PAIR_GREENONBLACK));
+          mvwprintw(contentwin, 8, 15, "CUT        ");
+          wattron(contentwin, COLOR_PAIR(PAIR_REGULAR));
+          break;
+        default:
+          mvwprintw(contentwin, 8, 15, "INVALID SEQ");
+      }
+      counts[color]++;
+      color = -1;
+      dest = -1;
+    }
+    mvwprintw(contentwin, 5, 1, "Count:");
+    mvwprintw(contentwin, 6, 6, "%d", counts[RED]);
+    mvwprintw(contentwin, 6, 15, "%d", counts[BLUE]);
+    mvwprintw(contentwin, 6, 25, "%d", counts[BLACK]);
+    wrefresh(contentwin);
   }
 }
 
