@@ -54,7 +54,16 @@ void knob(WINDOW *contentwin, WINDOW *miscwin) {
 
     switch (c) {
       case 'q':
+      case 27: // ESCAPE
         return;
+      case 127: // BACKSPACE
+        waddch(contentwin, '_');
+        if (index > 0) {
+          index -=2;
+        } else {
+          index -=1;
+        }
+        break;
       case 'o':
         input[index] = true;
         waddch(contentwin, c);

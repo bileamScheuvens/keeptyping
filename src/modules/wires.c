@@ -175,7 +175,7 @@ void wires_regular(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombat
 
 bool resolve_complex(bool red, bool blue, bool star, bool led, struct Bombattrs* bombattrs){
   bool C = true;
-  bool D = true;
+  bool D = false;
   bool S = !odd_serial_nr(bombattrs);
   bool P = has_port(bombattrs, "Parallel");
   bool B = bombattrs->nr_batteries >= 2;

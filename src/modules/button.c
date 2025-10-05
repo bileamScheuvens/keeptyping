@@ -120,6 +120,8 @@ void button(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombattrs){
     }
 
     draw_button_select(contentwin, color, label);
+      
+
 
     if (color == -1 || label == -1){
       continue;
