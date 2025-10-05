@@ -33,16 +33,13 @@ struct StageResult resolve_stage(int stage, int displayed, int digits[], int pos
           is_pos = false;
           break;
         case 2:
+        case 4:
           val = positions[0];
           is_pos = true;
           break;
         case 3:
           val = 1;
           is_pos = true;
-          break;
-        case 4:
-          val = 4;
-          is_pos = false;
           break;
       } break;
     case 2:
@@ -92,11 +89,11 @@ struct StageResult resolve_stage(int stage, int displayed, int digits[], int pos
           break;
         case 3:
           val = digits[3];
-          is_pos = true;
+          is_pos = false;
           break;
         case 4:
           val = digits[2];
-          is_pos = true;
+          is_pos = false;
           break;
       }
   }
@@ -163,29 +160,8 @@ void memory(WINDOW* contentwin, WINDOW* miscwin){
     // TODO rewrite this with less redundancy
     if (sr.is_pos) {
       memory_get_complement(contentwin, positions, digits, POSX, DIGX, BASEY, stage, sr.val);
-      // positions[stage] = sr.val;
-      // mvwprintw(contentwin, BASEY+stage, POSX, "%d", sr.val);
-      // wmove(contentwin, BASEY+stage, DIGX);
-      //
-      // if (stage == 5){ return; }
-      // c = wgetch(contentwin);
-      // if (c == 27 || c == 'q'){ return; }
-      // c -= '0';
-      // digits[stage] = c;
-      // mvwprintw(contentwin, BASEY+stage, DIGX, "%d", c);
     } else { 
-      memory_get_complement(contentwin, positions, digits, DIGX, POSX, BASEY, stage, sr.val);
-      // else, draw and wait for position
-      // digits[stage] = sr.val;
-      // mvwprintw(contentwin, BASEY+stage, DIGX, "%d", sr.val);
-      // wmove(contentwin, BASEY+stage, POSX);
-      //
-      // if (stage == 5){ return; }
-      // c = wgetch(contentwin);
-      // if (c == 27 || c == 'q'){ return; }
-      // c -= '0';
-      // positions[stage] = c;
-      // mvwprintw(contentwin, BASEY+stage, POSX, "%d", c);
+      memory_get_complement(contentwin, digits, positions, DIGX, POSX, BASEY, stage, sr.val);
     }
   }
 

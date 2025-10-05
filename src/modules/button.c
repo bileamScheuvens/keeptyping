@@ -39,6 +39,33 @@ bool hold_button(int color, int label, struct Bombattrs* bombattrs, WINDOW* cont
   return true;
 }
 
+
+void draw_button_select(WINDOW* contentwin, int color, int label){
+  /* Redraw guide with highlights */
+
+  disable_text(contentwin, color != RED);
+  mvwprintw(contentwin, 3, 5, "(r)ed");
+  disable_text(contentwin, color != BLUE);
+  mvwprintw(contentwin, 3, 12, "(b)lue");
+  disable_text(contentwin, color != BLACK);
+  mvwprintw(contentwin, 3, 20, "blac(k)");
+  disable_text(contentwin, color != WHITE);
+  mvwprintw(contentwin, 3, 29, "(w)hite");
+  disable_text(contentwin, color != YELLOW);
+  mvwprintw(contentwin, 3, 40, "(y)ellow");
+  disable_text(contentwin, false);
+
+  disable_text(contentwin, label != ABORT);
+  mvwprintw(contentwin, 4, 5, "(1) ABORT");
+  disable_text(contentwin, label != DETONATE);
+  mvwprintw(contentwin, 4, 16, "(2) DETONATE");
+  disable_text(contentwin, label != HOLD);
+  mvwprintw(contentwin, 4, 30, "(3) HOLD");
+  disable_text(contentwin, label != PRESS);
+  mvwprintw(contentwin, 4, 40, "(4) PRESS");
+  disable_text(contentwin, false);
+}
+
 void button(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombattrs){
   // cleanup 
   wclear(contentwin);
@@ -53,28 +80,62 @@ void button(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombattrs){
   mvwprintw(contentwin, 1, 1, "Select Color, then Label.");
 
 
-  // TODO indicate whats currently being selected
-  mvwprintw(contentwin, 2, 1, "(1)RED (2)BLUE  (3)BLACK (4)WHITE     (5)YELLOW");
-  mvwprintw(contentwin, 3, 1, "(1)ABORT (2)DETONATE (3)HOLD (4)PRESS");
+  int color = -1;
+  int label = -1;
+  draw_button_select(contentwin, color, label);
 
-  // TODO indicate selections
-  int color = get_valid_num(contentwin);
-  if (color == -1){
-    return;
-  }
-  int label = get_valid_num(contentwin);
-  if (label == -1){
-    return;
-  }
+  while (1){
+    int c = wgetch(contentwin);
+    switch(c) {
+      case 27: // Escape
+      case 'q':
+        return;
+      case 'r':
+        color = RED;
+        break;
+      case 'b':
+        color = BLUE;
+        break;
+      case 'k':
+        color = BLACK;
+        break;
+      case 'w':
+        color = WHITE;
+        break;
+      case 'y':
+        color = YELLOW;
+        break;
+      case '1':
+        label = ABORT;
+        break;
+      case '2':
+        label = DETONATE;
+        break;
+      case '3':
+        label = HOLD;
+        break;
+      case '4':
+        label = PRESS;
+        break;
+    }
 
+    draw_button_select(contentwin, color, label);
 
-  if (hold_button(color, label, bombattrs, contentwin)){
-    mvwprintw(contentwin, 5, 5, "HOLD & RELEASE ON:");
-    mvwprintw(contentwin, 6, 5, "- BLUE: 4");
-    mvwprintw(contentwin, 7, 5, "- YELLOW: 5");
-    mvwprintw(contentwin, 8, 5, "- OTHERWISE: 1");
-  } else {
-    mvwprintw(contentwin, 5, 5, "TAP & RELEASE");
+    if (color == -1 || label == -1){
+      continue;
+    }
+
+    if (hold_button(color, label, bombattrs, contentwin)){
+      mvwprintw(contentwin, 6, 5, "HOLD & RELEASE ON:");
+      mvwprintw(contentwin, 7, 5, "- BLUE: 4");
+      mvwprintw(contentwin, 8, 5, "- YELLOW: 5");
+      mvwprintw(contentwin, 9, 5, "- OTHERWISE: 1");
+    } else {
+      mvwprintw(contentwin, 6, 5, "TAP & RELEASE     ");
+      mvwprintw(contentwin, 7, 5, "         ");
+      mvwprintw(contentwin, 8, 5, "           ");
+      mvwprintw(contentwin, 9, 5, "              ");
+    }
   }
 
 

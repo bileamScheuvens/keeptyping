@@ -122,7 +122,7 @@ void wires_regular(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombat
         i = 6;
         break;
       case 127: // Backspace
-        if (i>1){
+        if (i>0){
           i-=2;
           wmove(contentwin, 4, 8+i+1);
           wrefresh(contentwin);
@@ -207,8 +207,8 @@ bool resolve_complex(bool red, bool blue, bool star, bool led, struct Bombattrs*
 
 void set_bool_and_draw(WINDOW* contentwin, bool *complex_attr, int pos, bool target){
   /*
-  Utility to set complex wire attr and draw state to contentwin.
-  */
+     Utility to set complex wire attr and draw state to contentwin.
+     */
   *complex_attr = target;
   if (target){
     mvwprintw(contentwin, 2, pos, "X");
@@ -221,6 +221,7 @@ void wires_complex(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombat
   // cleanup
   wclear(contentwin);
   box(contentwin, 0,0);
+  init_color_pairs();
 
   char *msgs[] = {"Complex wires rely on", "- Serial Nr", "- Parallel Port", "- Battery count"};
   log_to_misc_many(miscwin, msgs, 4);
@@ -240,7 +241,6 @@ void wires_complex(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombat
   mvwprintw(contentwin, 0, getmaxx(contentwin)/2 - 6, "COMPLEX WIRES");
   mvwprintw(contentwin, 1, 1, "Specify color, star and LED.");
   mvwprintw(contentwin, 2, 1, "Toggle: (r)ed [ ], (b)lue [ ], (s)tar [ ], (l)ed [ ] |  (c)lear  |");
-  mvwprintw(contentwin, 7, 15, "CUT WIRE -> %b", cut);
   wrefresh(contentwin);
 
 
@@ -273,7 +273,16 @@ void wires_complex(WINDOW* contentwin, WINDOW* miscwin, struct Bombattrs* bombat
         break;
     }
     cut = resolve_complex(red, blue, star, led, bombattrs);
-    mvwprintw(contentwin, 7, 15, "CUT WIRE -> %b", cut);
+    if(cut) {
+      wattron(contentwin, COLOR_PAIR(PAIR_GREENONBLACK));
+      mvwprintw(contentwin, 7, 15, "CUT   ");
+      wattron(contentwin, COLOR_PAIR(PAIR_REGULAR));
+    } else {
+      wattron(contentwin, COLOR_PAIR(PAIR_REDONBLACK));
+      mvwprintw(contentwin, 7, 15, "NO CUT");
+      wattron(contentwin, COLOR_PAIR(PAIR_REGULAR));
+    }
+
     wrefresh(contentwin);
   }
 }
@@ -402,20 +411,7 @@ void wire_sequence_alt(WINDOW* contentwin, WINDOW* miscwin){
     mvwprintw(contentwin, 6, 25, "%d", black_count);
 
     // display result
-    switch (cut) {
-      case 0:
-        wattron(contentwin, COLOR_PAIR(PAIR_GREENONBLACK));
-        mvwprintw(contentwin, 8, 15, "NO CUT     ");
-        wattron(contentwin, COLOR_PAIR(PAIR_REGULAR));
-        break;
-      case 1:
-        wattron(contentwin, COLOR_PAIR(PAIR_GREENONBLACK));
-        mvwprintw(contentwin, 8, 15, "CUT        ");
-        wattron(contentwin, COLOR_PAIR(PAIR_REGULAR));
-        break;
-      default:
-        mvwprintw(contentwin, 8, 15, "INVALID SEQ");
-    }
+     mvwprintw(contentwin, 7, 15, "CUT WIRE -> %b", cut);
     wrefresh(contentwin);
   }
 }
